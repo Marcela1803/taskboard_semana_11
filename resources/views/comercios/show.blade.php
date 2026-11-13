@@ -20,12 +20,22 @@
     @endif
 
     <h2>Transacciones</h2>
-    @forelse ($comercio->transacciones as $t)
-        <div class="transaccion">
-            <strong>${{ $t->monto }}</strong> - {{ $t->cliente_nombre }}
-            <x-badge-estado estado="{{ $t->estado }}" />
-        </div>
-    @empty
-        <p>Sin transacciones</p>
-    @endforelse
+@forelse ($comercio->transacciones as $t)
+    <div class="transaccion">
+        <strong>${{ $t->monto }}</strong> - {{ $t->cliente_nombre }}
+        <x-badge-estado estado="{{ $t->estado }}" />
+        <a href="{{ route('transacciones.edit', $t) }}">Editar</a>
+        <form action="{{ route('transacciones.destroy', $t) }}" 
+              method="POST" 
+              onsubmit="return confirm('¿Eliminar esta transacción? Esta acción no se puede deshacer.')" 
+              style="display: inline-block;">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Eliminar</button>
+        </form>
+    </div>
+@empty
+    <p>Sin transacciones</p>
+@endforelse
+
 @endsection

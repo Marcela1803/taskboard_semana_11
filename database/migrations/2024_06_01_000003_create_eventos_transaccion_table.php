@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transaccion_id')
                 ->constrained('transacciones')
-                ->cascadeOnDelete();
+                ->onDelete('cascade');
             $table->string('tipo_evento');
             $table->text('detalle')->nullable();
             $table->timestamps();
