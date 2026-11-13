@@ -33,6 +33,17 @@
             @method('DELETE')
             <button type="submit">Eliminar</button>
         </form>
+    @if ($t->estado === 'Iniciada')
+            <form action="{{ route('transacciones.mover', [$t, 'Completada']) }}" method="POST" style="display: inline-block;">
+                @csrf @method('PATCH')
+                <button type="submit">Marcar Completada</button>
+            </form>
+
+            <form action="{{ route('transacciones.mover', [$t, 'Fallida']) }}" method="POST" style="display: inline-block;">
+                @csrf @method('PATCH')
+                <button type="submit">Marcar Fallida</button>
+            </form>
+        @endif
     </div>
 @empty
     <p>Sin transacciones</p>

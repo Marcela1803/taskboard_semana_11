@@ -67,4 +67,25 @@ public function destroy(Transaccion $transaccion)
         ->with('mensaje', "Transacción de {$nombreCliente} eliminada.");   
 
         }
+        
+public function moverEstado(Transaccion $transaccion, string $estado)
+{
+    // Mapa de transiciones válidas según el estado actual
+    $transiciones = [
+        'Iniciada'   => ['Completada', 'Fallida'],
+        'Completada' => [],
+        'Fallida'    => ['Iniciada'],
+    ];
+
+    // Validamos si el nuevo estado está permitido basándonos en el estado ACTUAL de la transacción
+    if (!in_array($estado, $transiciones[$transaccion->estado] ?? [])) {
+        abort(400, "No se puede mover de {$transaccion->estado} a {$estado}.");
+    }
+    
+    $transaccion->update(['estado' => $estado]);
+    
+    return redirect()
+        ->route('comercios.show', $transaccion->comercio_id)
+        ->with('mensaje', "Transacción movida a {$estado}.");
+}
 }
