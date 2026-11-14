@@ -32,12 +32,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;      
-
         }
         nav a {
             color: #fff;
             text-decoration: none;
             font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
         }
         nav .tag {
             background: var(--gold);
@@ -46,6 +53,19 @@
             border-radius: 999px;
             font-size: 0.75rem;
             font-weight: bold;
+        }
+        .btn-salir {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: #fff;
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .btn-salir:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
         main {
             max-width: 900px;
@@ -87,17 +107,37 @@
 </head>
 <body>
     <nav>
-        @if (session('mensaje'))
-        <div class="alerta-exito" style="background:#EAF6EE; color:#1E7E52; padding:0.75rem 1rem; margin:1rem 0; border-radius: 8px;">
-            {{ session('mensaje') }}
-        </div>
-    @endif
-    
         <a href="{{ route('comercios.index') }}">Pasarela de Pagos · TaskBoard</a>
-        <span class="tag">UPED · Integración de Sistemas</span>
+
+        <div class="nav-right">
+            {{-- Opciones para visitantes (sin sesión) --}}
+            @guest
+                <a href="{{ route('login') }}">Iniciar sesión</a>
+                <a href="{{ route('registro') }}">Registrarse</a>
+            @endguest
+
+            {{-- Opciones para usuarios autenticados --}}
+            @auth
+                <span style="font-size: 0.95rem;">Hola, <strong>{{ Auth::user()->name }}</strong></span>
+
+                <form action="{{ route('logout') }}" method="POST" style="display: inline; margin: 0;">
+                    @csrf
+                    <button type="submit" class="btn-salir">Cerrar sesión</button>
+                </form>
+            @endauth
+
+            <span class="tag">UPED · Integración de Sistemas</span>
+        </div>
     </nav>
 
     <main>
+        {{-- Mensaje flash global de éxito --}}
+        @if (session('mensaje'))
+            <div class="alerta-exito" style="background:#EAF6EE; color:#1E7E52; padding:0.75rem 1rem; margin-bottom: 1.5rem; border-radius: 8px; border: 1px solid #C6E6D1;">
+                {{ session('mensaje') }}
+            </div>
+        @endif
+
         @yield('contenido')
     </main>
 
